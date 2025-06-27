@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <!-- Encodage des caractères -->
+  <meta charset="UTF-8">
+
+  <!-- Affichage responsive pour tous les types d'appareils -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Titre de l'onglet -->
+  <title>Convertisseur AS-ABC</title>
+
+  <!-- Favicon (icône de l’onglet) -->
+  <link rel="icon" type="image/jpeg" href="ressources/icon.jpg">
+
+  <!-- Importation d'une police Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400&display=swap" rel="stylesheet">
+
+  <!-- Début des styles du fichier CSS intégré au code html-->
+  <style>
+    /* Définition des variables CSS */
+    :root {
+      --primary-color: #E7AF2F;         /* Couleur principale (jaune/or) */
+      --secondary-color: #5d6d7e;       /* Couleur secondaire (gris/bleu) */
+      --bg-opacity: 0.3;                /* Opacité du fond (effet verre) */
+      --blur-amount: 3px;               /* Flou pour l’effet "verre" */
+      --border-radius: 10px;            /* Arrondi des éléments */
+      --button-radius: 30px;            /* Arrondi des boutons */
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);  /* Ombre portée */
+      --transition: all 0.2s ease-in-out;      /* Transition fluide */
+    }
+
+    /* Boîte de modélisation universelle */
+    * {
+      box-sizing: border-box;
+    }
+
+    /* Style général du corps de la page */
+    body {
+      background: url('ressources/Renault-5-E-Tech-electric.jpg') center 40% / cover no-repeat;
+      margin: 10px;
+      font-family: sans-serif;
+      line-height: 1.6;
+    }
+
+    /* Conteneur principal */
+    .container {
+      max-width: none;
+      margin: 0;
+    }
+
+    /* Effet de flou et de transparence (effet verre) */
+    .glass-effect {
+      background-color: rgba(255, 255, 255, var(--bg-opacity));
+      border: none;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(var(--blur-amount));
+    }
+
+    /* Conteneur de l'animation de texte */
+    .scrolling-container {
+      background-color: rgba(255, 255, 255, 0.1);
+      height: 60px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 20px 0;
+      backdrop-filter: blur(4px);
+    }
+
+    /* Texte animé en haut */
+    .scrolling-text {
+      font-family: 'Fira Code', 'Courier New', monospace;
+      font-size: 50px;
+      font-weight: 300;
+      color: white;
+      white-space: nowrap;
+      overflow: hidden;
+      display: inline-block;
+    }
+
+    /* Style pour les caractères aléatoires dans l'animation */
+    .char-random {
+      color: var(--primary-color);
+    }
+
+    /* Titres principaux */
+    h1 {
+      color: black;
+      margin: 20px 0 15px 0;
+    }
+
+    /* Groupe de boutons (convertir, copier, etc.) */
+    .button-group {
+      margin-bottom: 10px;
+    }
+
+    /* Style des boutons avec icônes */
+    .icon-button {
+      display: inline-flex;
+      align-items: stretch;
+      border-radius: var(--button-radius);
+      margin-bottom: 10px;
+      margin-right: 10px;
+      font-weight: bold;
+      color: white;
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 16px;
+      height: 40px;
+      border: 2px solid black;
+      background: none;
+      transition: var(--transition);
+      padding: 0;
+      position: relative;
+    }
+
+    .icon-button:hover {
+      transform: scale(1.05); /* Effet zoom au survol */
+    }
+
+    .icon-button:focus {
+      outline: 2px solid var(--primary-color);
+      outline-offset: 2px;
+    }
+
+    /* Partie gauche du bouton contenant l'icône */
+    .icon-part {
+      background-color: var(--secondary-color);
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-top-left-radius: var(--button-radius);
+      border-bottom-left-radius: var(--button-radius);
+      position: relative;
+      z-index: 2;
+    }
+
+    .icon-part img {
+      width: 38px;
+      height: 38px;
+    }
+
+    .icon-part::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: -15px;
+      width: 30px;
+      height: 36px;
+      background-color: var(--primary-color);
+      border-radius: var(--button-radius) 0 0 var(--button-radius);
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    /* Partie droite du bouton contenant le texte */
+    .text-part {
+      background-color: var(--primary-color);
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      border-top-right-radius: var(--button-radius);
+      border-bottom-right-radius: var(--button-radius);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Zone de texte (input utilisateur + résultat) */
+    textarea {
+      width: calc(100% - 12px);
+      min-height: 70px;
+      margin-bottom: 10px;
+      padding: 10px;
+      color: black;
+      font-family: inherit;
+      font-size: 14px;
+      resize: none;
+      transition: var(--transition);
+    }
+
+    textarea:focus {
+      outline: 2px solid var(--primary-color);
+    }
+
+    textarea[readonly] {
+      cursor: default;
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Messages de notification */
+    .success-message {
+      background-color: rgba(76, 175, 80, 0.8); /* Vert */
+      color: white;
+      padding: 10px;
+      border-radius: var(--border-radius);
+      margin: 10px 0;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .error-message {
+      background-color: rgba(244, 67, 54, 0.8); /* Rouge */
+      color: white;
+      padding: 10px;
+      border-radius: var(--border-radius);
+      margin: 10px 0;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .info-message {
+      background-color: rgba(33, 150, 243, 0.8); /* Bleu */
+      color: white;
+      padding: 10px;
+      border-radius: var(--border-radius);
+      margin: 10px 0;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    /* Animation d’apparition */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Adaptation mobile : tablettes */
+    @media (max-width: 768px) {
+      body {
+        margin: 5px;
+      }
+
+      .icon-button {
+        font-size: 14px;
+        height: 36px;
+      }
+
+      .text-part {
+        padding: 0 12px;
+      }
+
+      .scrolling-container {
+        height: 50px;
+      }
+    }
+
+    /* Adaptation mobile : smartphones */
+    @media (max-width: 480px) {
+      .button-group {
+        flex-direction: column;
+      }
+
+      .icon-button {
+        width: 100%;
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Conteneur global Javascript client HTML (executé dans le navigateur)-->
+  <div class="container">
+
+    <!-- Bandeau animé en haut de page -->
+    <div class="scrolling-container glass-effect">
+      <div class="scrolling-text" id="animatedText" role="banner" aria-live="polite"></div>
+    </div>
+
+    <main>
+      <!-- Section d'entrée utilisateur -->
+      <section>
+        <h1>Liste à convertir</h1>
+
+        <!-- Boutons de format -->
+        <div class="button-group">
+          <button class="icon-button" onclick="choisirFormat('simplicite')" aria-label="Convertir au format AS-ABC Simplicité">
+            <div class="icon-part">
+              <img src="ressources/project.svg" alt="">
+            </div>
+            <div class="text-part">AS-ABC Simplicité</div>
+          </button>
+
+          <button class="icon-button" onclick="choisirFormat('spotfire')" aria-label="Convertir au format Spotfire">
+            <div class="icon-part">
+              <img src="ressources/project.svg" alt="">
+            </div>
+            <div class="text-part">Spotfire</div>
+          </button>
+        </div>
+
+        <!-- Zone de saisie -->
+        <textarea 
+          id="referencesInput" 
+          class="glass-effect"
+          placeholder="Merci d'entrer votre liste ici (En colonne SVP)"
+          aria-label="Liste des références à convertir"
+        ></textarea>
+      </section>
+
+      <!-- Section de sortie (résultat) -->
+      <section>
+        <h1>Liste Convertie</h1>
+
+        <div class="button-group">
+          <button class="icon-button" onclick="copierResultat()" aria-label="Copier le résultat dans le presse-papiers">
+            <div class="icon-part">
+              <img src="ressources/project.svg" alt="">
+            </div>
+            <div class="text-part">Copier le résultat</div>
+          </button>
+
+          <button class="icon-button" onclick="rafraichirPage()" aria-label="Rafraîchir la page">
+            <div class="icon-part">
+              <img src="ressources/project.svg" alt="">
+            </div>
+            <div class="text-part">Rafraîchir</div>
+          </button>
+        </div>
+
+        <!-- Messages -->
+        <div id="infoMessage" class="info-message">
+          ℹ Liste convertie avec succès !
+        </div>
+
+        <div id="successMessage" class="success-message">
+          ✓ Résultat copié avec succès !
+        </div>
+
+        <div id="errorMessage" class="error-message">
+          ✗ Aucun résultat. Veuillez d'abord entrer une liste à convertir.
+        </div>
+
+        <!-- Zone de sortie -->
+        <textarea 
+          id="convertedReferences" 
+          class="glass-effect"
+          readonly 
+          aria-label="Résultat de la conversion"
+        ></textarea>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
+
+
+<script>
+  // Configuration des paramètres de l'animation de texte
+  const CONFIG = {
+    chars: "!@#$€%^&*()_+-=[]{}|;:',.<>/?~", // Liste de caractères utilisés pour l'effet de décryptage
+    revealDelay: 30, // Délai entre chaque caractère révélé (en millisecondes)
+    pauseBetweenPhrases: 1500, // Pause entre deux phrases affichées
+    phrases: [ // Phrases à afficher avec effet de décryptage
+      "Bienvenue sur notre convertisseur multi-formats",
+      "Convertissez au format AS-ABC, Spotfire en toute Simplicité !",
+      "Consultez en masse des réfs, Triplets ID, fournisseurs !"
+    ]
+  };
+
+  // Index de la phrase actuellement affichée
+  let currentPhraseIndex = 0;
+
+  // Raccourci pour sélectionner un élément par son ID
+  const $ = id => document.getElementById(id);
+
+  // Retourne un caractère aléatoire de la liste définie
+  const randomChar = () => CONFIG.chars[Math.floor(Math.random() * CONFIG.chars.length)];
+
+  // Fonction appelée quand un format est sélectionné
+  function choisirFormat(format) {
+    const input = $('referencesInput').value.trim(); // Récupère les références saisies
+    if (!input) { // Si vide, affiche une erreur
+      showErrorMessage();
+      return;
+    }
+
+    // Découpe les lignes, supprime les blancs et filtre les lignes vides
+    const refs = input.split('\n')
+      .map(ref => ref.trim())
+      .filter(ref => ref.length > 0);
+
+    if (refs.length === 0) {
+      alert('Aucune référence valide trouvée.');
+      return;
+    }
+
+    // Définition des formats disponibles et leur logique
+    const formatters = {
+      simplicite: refs => `in (${refs.map(ref => `'${ref}'`).join(', ')})`,
+      spotfire: refs => refs.join(' or '),
+      dbeaver: refs => `in (${refs.map(ref => `'${ref}'`).join(',\n')})`
+    };
+
+    // Conversion selon le format sélectionné
+    const finalText = formatters[format]?.(refs) || '';
+
+    // Affiche le texte converti dans la zone de résultat
+    const output = $('convertedReferences');
+    output.value = finalText;
+    output.style.height = 'auto';
+    output.style.height = (output.scrollHeight) + 'px';
+
+    showInfoMessage(); // Affiche un message d'information
+  }
+
+  // Fonction pour copier le résultat dans le presse-papiers
+  function copierResultat() {
+    const output = $('convertedReferences');
+    if (!output.value.trim()) { // Si rien à copier, affiche une erreur
+      showErrorMessage();
+      return;
+    }
+
+    // Si l'API Clipboard est disponible
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(output.value).then(() => {
+        showSuccessMessage(); // Message de succès
+      }).catch(() => {
+        fallbackCopy(output); // Méthode de secours
+      });
+    } else {
+      fallbackCopy(output); // Méthode ancienne
+    }
+  }
+
+  // Méthode de secours pour copier le texte si Clipboard API échoue
+  function fallbackCopy(output) {
+    output.select(); // Sélectionne le texte
+    const success = document.execCommand("copy"); // Tente de copier
+    if (success) {
+      showSuccessMessage(); // Message si ça marche
+    }
+  }
+
+  // Affiche un message de succès
+  function showSuccessMessage() {
+    const message = $('successMessage');
+    message.style.display = 'block';
+    setTimeout(() => {
+      message.style.display = 'none';
+    }, 3000); // Masque après 3 secondes
+  }
+
+  // Affiche un message d'erreur
+  function showErrorMessage() {
+    const message = $('errorMessage');
+    message.style.display = 'block';
+    setTimeout(() => {
+      message.style.display = 'none';
+    }, 3000);
+  }
+
+  // Affiche un message d'information
+  function showInfoMessage() {
+    const message = $('infoMessage');
+    message.style.display = 'block';
+    setTimeout(() => {
+      message.style.display = 'none';
+    }, 3000);
+  }
+
+  // Recharge la page
+  function rafraichirPage() {
+    location.reload();
+  }
+
+  // Effet de décryptage pour afficher les phrases
+  function decryptEffect(text, callback) {
+    const container = $("animatedText");
+    const revealed = new Array(text.length).fill(false); // Tableau pour suivre les lettres révélées
+    const letterIndexes = [...Array(text.length).keys()].filter(i => text[i] !== ' '); // Index des lettres (ignore les espaces)
+    const shuffled = [...letterIndexes].sort(() => Math.random() - 0.5); // Mélange aléatoire des index
+    const threshold = Math.floor(letterIndexes.length * 0.6); // 60% des lettres révélées immédiatement
+
+    // Révèle 60% des lettres
+    shuffled.slice(threshold).forEach(i => revealed[i] = true);
+
+    const toReveal = shuffled.slice(0, threshold); // Lettres à révéler progressivement
+    let revealedCount = 0;
+
+    // Fonction récursive d'animation
+    function animate() {
+      let display = "";
+      for (let i = 0; i < text.length; i++) {
+        if (text[i] === ' ') {
+          display += ' '; // Garde les espaces
+        } else if (revealed[i]) {
+          display += `<span>${text[i]}</span>`; // Lettre révélée
+        } else {
+          display += `<span class="char-random">${randomChar()}</span>`; // Caractère aléatoire
+        }
+      }
+
+      container.innerHTML = display; // Affiche le texte généré
+
+      if (revealedCount < toReveal.length) {
+        const randomIndex = toReveal[Math.floor(Math.random() * toReveal.length)];
+        if (!revealed[randomIndex]) {
+          revealed[randomIndex] = true; // Révèle une lettre de plus
+          revealedCount++;
+        }
+        setTimeout(animate, CONFIG.revealDelay); // Relance l'animation
+      } else {
+        setTimeout(callback, CONFIG.pauseBetweenPhrases); // Passe à la phrase suivante après une pause
+      }
+    }
+
+    animate(); // Lance l'animation
+  }
+
+  // Boucle d'animation des phrases
+  function startTextAnimation() {
+    decryptEffect(CONFIG.phrases[currentPhraseIndex], () => {
+      currentPhraseIndex = (currentPhraseIndex + 1) % CONFIG.phrases.length; // Passe à la phrase suivante
+      startTextAnimation(); // Relance l'animation
+    });
+  }
+
+  // Quand le document est prêt, démarre l'animation
+  document.addEventListener('DOMContentLoaded', () => {
+    startTextAnimation();
+  });
+
+  // Gestion des raccourcis clavier
+  document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey || e.metaKey) { // Si Ctrl ou Cmd est enfoncé
+      switch(e.key) {
+        case 'Enter':
+          e.preventDefault();
+          choisirFormat('simplicite'); // Ctrl+Entrée => conversion en format 'simplicite'
+          break;
+        case 'c':
+          if (e.target !== $('referencesInput')) { // Ne pas interférer si l'utilisateur tape dans le champ
+            e.preventDefault();
+            copierResultat(); // Ctrl+C => copie le résultat
+          }
+          break;
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
