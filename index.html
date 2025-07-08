@@ -10,7 +10,7 @@
   <!-- Titre de l'onglet -->
   <title>Convertisseur AS-ABC</title>
 
-  <!-- Favicon (icône de l’onglet) -->
+  <!-- Favicon (icône de l'onglet) -->
   <link rel="icon" type="image/jpeg" href="ressources/icon.jpg">
 
   <!-- Importation d'une police Google Fonts -->
@@ -23,7 +23,7 @@
       --primary-color: #E7AF2F;         /* Couleur principale (jaune/or) */
       --secondary-color: #5d6d7e;       /* Couleur secondaire (gris/bleu) */
       --bg-opacity: 0.3;                /* Opacité du fond (effet verre) */
-      --blur-amount: 3px;               /* Flou pour l’effet "verre" */
+      --blur-amount: 3px;               /* Flou pour l'effet "verre" */
       --border-radius: 10px;            /* Arrondi des éléments */
       --button-radius: 30px;            /* Arrondi des boutons */
       --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);  /* Ombre portée */
@@ -61,24 +61,37 @@
     /* Conteneur de l'animation de texte */
     .scrolling-container {
       background-color: rgba(255, 255, 255, 0.1);
-      height: 60px;
+      min-height: 60px;
+      height: auto;
       overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 20px 0;
       backdrop-filter: blur(4px);
+      padding: 15px 10px;
+      width: 100%;
     }
 
-    /* Texte animé en haut */
+    /* Texte animé en haut - Taille responsive */
     .scrolling-text {
       font-family: 'Fira Code', 'Courier New', monospace;
-      font-size: 50px;
+      font-size: clamp(1.1rem, 3.5vw, 2.8rem); /* Taille responsive avec clamp - augmentée */
       font-weight: 300;
+      font-stretch: condensed; /* Caractères plus étroits */
+      letter-spacing: -0.08em; /* Espacement entre lettres réduit */
       color: white;
-      white-space: nowrap;
-      overflow: hidden;
-      display: inline-block;
+      white-space: normal;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      display: block;
+      text-align: center;
+      max-width: 100%;
+      line-height: 1.2;
+      hyphens: auto;
+      transform: scaleY(1.35); /* Étirement vertical léger */
+	  transform-origin: center;
+      line-height: calc(1.2 / 1.25);
     }
 
     /* Style pour les caractères aléatoires dans l'animation */
@@ -222,16 +235,49 @@
       animation: fadeIn 0.3s ease;
     }
 
-    /* Animation d’apparition */
+    /* Animation d'apparition */
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(-10px); }
       to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Adaptation responsive pour grands écrans */
+    @media (min-width: 1200px) {
+      .scrolling-container {
+        min-height: 70px;
+        padding: 20px 15px;
+      }
+      
+      .scrolling-text {
+        font-size: clamp(2rem, 3.5vw, 3.2rem);
+      }
+    }
+
+    /* Adaptation responsive pour écrans moyens */
+    @media (max-width: 1024px) {
+      .scrolling-container {
+        min-height: 60px;
+        padding: 15px 10px;
+      }
+      
+      .scrolling-text {
+        font-size: clamp(1.6rem, 3.2vw, 2.5rem);
+      }
     }
 
     /* Adaptation mobile : tablettes */
     @media (max-width: 768px) {
       body {
         margin: 5px;
+      }
+
+      .scrolling-container {
+        min-height: 50px;
+        padding: 10px 8px;
+      }
+      
+      .scrolling-text {
+        font-size: clamp(1.3rem, 3vw, 2rem);
       }
 
       .icon-button {
@@ -242,14 +288,19 @@
       .text-part {
         padding: 0 12px;
       }
-
-      .scrolling-container {
-        height: 50px;
-      }
     }
 
     /* Adaptation mobile : smartphones */
     @media (max-width: 480px) {
+      .scrolling-container {
+        min-height: 45px;
+        padding: 8px 5px;
+      }
+      
+      .scrolling-text {
+        font-size: clamp(1.1rem, 2.8vw, 1.6rem);
+      }
+
       .button-group {
         flex-direction: column;
       }
@@ -257,6 +308,18 @@
       .icon-button {
         width: 100%;
         justify-content: flex-start;
+      }
+    }
+
+    /* Adaptation pour très petits écrans */
+    @media (max-width: 320px) {
+      .scrolling-container {
+        min-height: 40px;
+        padding: 5px;
+      }
+      
+      .scrolling-text {
+        font-size: clamp(1rem, 2.2vw, 1.4rem);
       }
     }
   </style>
@@ -344,14 +407,11 @@
       </section>
     </main>
   </div>
-</body>
-</html>
-
 
 <script>
   // Configuration des paramètres de l'animation de texte
   const CONFIG = {
-    chars: "!@#$€%^&*()_+-=[]{}|;:',.<>/?~", // Liste de caractères utilisés pour l'effet de décryptage
+    chars: "!()*+[#]{_}|<->/?", // Liste de caractères utilisés pour l'effet de décryptage
     revealDelay: 30, // Délai entre chaque caractère révélé (en millisecondes)
     pauseBetweenPhrases: 1500, // Pause entre deux phrases affichées
     phrases: [ // Phrases à afficher avec effet de décryptage
