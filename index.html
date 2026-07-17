@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="fr">
-<head>
+<!-- saved from url=(0035)https://as-abc.github.io/Converter/ -->
+<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <!-- Encodage des caractères -->
-  <meta charset="UTF-8">
+  
 
   <!-- Affichage responsive pour tous les types d'appareils -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,10 +11,10 @@
   <title>Convertisseur AS-ABC</title>
 
   <!-- Favicon (icône de l'onglet) -->
-  <link rel="icon" type="image/jpeg" href="ressources/icon.jpg">
+  <link rel="icon" type="image/jpeg" href="https://as-abc.github.io/Converter/ressources/icon.jpg">
 
   <!-- Importation d'une police Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400&display=swap" rel="stylesheet">
+  <link href="./ressources/css2" rel="stylesheet">
 
   <!-- Début des styles du fichier CSS intégré au code html-->
   <style>
@@ -330,59 +330,50 @@
 
     <!-- Bandeau animé en haut de page -->
     <div class="scrolling-container glass-effect">
-      <div class="scrolling-text" id="animatedText" role="banner" aria-live="polite"></div>
+      <div class="scrolling-text" id="animatedText" role="banner" aria-live="polite"><span>C</span><span>o</span><span class="char-random">]</span><span class="char-random">&lt;</span><span class="char-random">/</span><span>l</span><span>t</span><span>e</span><span class="char-random">|</span> <span class="char-random">!</span><span>n</span> <span>m</span><span class="char-random">?</span><span class="char-random">?</span><span>s</span><span class="char-random">#</span> <span class="char-random">#</span><span>e</span><span>s</span> <span class="char-random">[</span><span class="char-random">&lt;</span><span class="char-random">#</span><span class="char-random">&gt;</span><span>,</span> <span>T</span><span class="char-random">/</span><span class="char-random">&lt;</span><span>p</span><span class="char-random">}</span><span>e</span><span class="char-random">-</span><span class="char-random">[</span> <span class="char-random">[</span><span>D</span><span class="char-random">{</span> <span class="char-random">!</span><span class="char-random">#</span><span>u</span><span class="char-random">[</span><span class="char-random">!</span><span class="char-random">_</span><span>s</span><span>s</span><span class="char-random">*</span><span>u</span><span class="char-random">|</span><span>s</span> <span>!</span></div>
     </div>
 
     <main>
       <!-- Section d'entrée utilisateur -->
       <section>
+        
+        <!-- Bouton Rafraichir déplacé au-dessus du texte "Liste à convertir" -->
+        <div class="button-group">
+          <button class="icon-button" onclick="rafraichirPage()" aria-label="Rafraîchir la page">
+            <div class="icon-part">
+              <img src="./ressources/project.svg" alt="">
+            </div>
+            <div class="text-part">Rafraîchir</div>
+          </button>
+        </div>
+
         <h1>Liste à convertir</h1>
 
-        <!-- Boutons de format -->
+        <!-- Zone de saisie -->
+        <textarea id="referencesInput" class="glass-effect" placeholder="Merci d&#39;entrer votre liste ici (En colonne SVP)" aria-label="Liste des références à convertir"></textarea>
+
+        <!-- Boutons de format déplacés en dessous de la zone de saisie -->
         <div class="button-group">
-          <button class="icon-button" onclick="choisirFormat('simplicite')" aria-label="Convertir au format AS-ABC Simplicité">
+          <button class="icon-button" onclick="choisirFormat(&#39;simplicite&#39;)" aria-label="Convertir au format AS-ABC Simplicité">
             <div class="icon-part">
-              <img src="ressources/project.svg" alt="">
+              <img src="./ressources/project.svg" alt="">
             </div>
             <div class="text-part">AS-ABC Simplicité</div>
           </button>
 
-          <button class="icon-button" onclick="choisirFormat('spotfire')" aria-label="Convertir au format Spotfire">
+          <button class="icon-button" onclick="choisirFormat(&#39;spotfire&#39;)" aria-label="Convertir au format Spotfire">
             <div class="icon-part">
-              <img src="ressources/project.svg" alt="">
+              <img src="./ressources/project.svg" alt="">
             </div>
             <div class="text-part">Spotfire</div>
           </button>
         </div>
 
-        <!-- Zone de saisie -->
-        <textarea 
-          id="referencesInput" 
-          class="glass-effect"
-          placeholder="Merci d'entrer votre liste ici (En colonne SVP)"
-          aria-label="Liste des références à convertir"
-        ></textarea>
       </section>
 
       <!-- Section de sortie (résultat) -->
       <section>
         <h1>Liste Convertie</h1>
-
-        <div class="button-group">
-          <button class="icon-button" onclick="copierResultat()" aria-label="Copier le résultat dans le presse-papiers">
-            <div class="icon-part">
-              <img src="ressources/project.svg" alt="">
-            </div>
-            <div class="text-part">Copier le résultat</div>
-          </button>
-
-          <button class="icon-button" onclick="rafraichirPage()" aria-label="Rafraîchir la page">
-            <div class="icon-part">
-              <img src="ressources/project.svg" alt="">
-            </div>
-            <div class="text-part">Rafraîchir</div>
-          </button>
-        </div>
 
         <!-- Messages -->
         <div id="infoMessage" class="info-message">
@@ -398,12 +389,18 @@
         </div>
 
         <!-- Zone de sortie -->
-        <textarea 
-          id="convertedReferences" 
-          class="glass-effect"
-          readonly 
-          aria-label="Résultat de la conversion"
-        ></textarea>
+        <textarea id="convertedReferences" class="glass-effect" readonly="" aria-label="Résultat de la conversion"></textarea>
+
+        <!-- Bouton Copier le résultat déplacé en dessous de la zone de sortie -->
+        <div class="button-group">
+          <button class="icon-button" onclick="copierResultat()" aria-label="Copier le résultat dans le presse-papiers">
+            <div class="icon-part">
+              <img src="./ressources/project.svg" alt="">
+            </div>
+            <div class="text-part">Copier le résultat</div>
+          </button>
+        </div>
+
       </section>
     </main>
   </div>
@@ -604,5 +601,4 @@
   });
 </script>
 
-</body>
-</html>
+</body></html>
